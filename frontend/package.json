@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "chess.js": "^1.0.0-beta.8",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.10.3",
     "react-chessboard": "^4.6.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"

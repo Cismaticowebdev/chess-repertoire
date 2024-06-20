@@ -1,6 +1,7 @@
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useState } from "react";
+import MovesList from "./MovesList";
 
 function ChessRepertoireBoard() {
     const chess = new Chess();
@@ -20,6 +21,7 @@ function ChessRepertoireBoard() {
         chess.move(move);
         setBoardPosition(chess.fen());
         setGamePGN(chess.pgn());
+        console.log(gamePGN);
     }
 
     function handleRotateBoard() {
@@ -30,6 +32,7 @@ function ChessRepertoireBoard() {
         <h1>Chess Board</h1>
         <Chessboard boardWidth={520} animationDuration={0} boardOrientation={rotateBoard} position={boardPosition} onPieceDrop={onDrop} />
         <button onClick={handleRotateBoard}>Rotate Board</button>
+        
     </div>
 }
 
