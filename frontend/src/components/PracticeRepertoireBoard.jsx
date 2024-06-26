@@ -3,7 +3,7 @@ import { Chess } from "chess.js";
 import { useRef, useState } from "react";
 import MovesList from "./MovesList";
 
-function ChessRepertoireBoard() {
+function PracticeRepertoireBoard() {
     const chessRef = useRef(new Chess());
     const chess = chessRef.current;
 
@@ -73,4 +73,4 @@ function ChessRepertoireBoard() {
     </div>
 }
 
-export default ChessRepertoireBoard;
+export default PracticeRepertoireBoard;
