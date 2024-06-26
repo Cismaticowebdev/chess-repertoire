@@ -10,18 +10,49 @@ function ChessRepertoireBoard() {
     const [rotateBoard, setRotateBoard] = useState("white");
     const [boardPosition, setBoardPosition] = useState("start");
     const [gamePGN, setGamePGN] = useState(chess.pgn());
+    const [moveNumber, setMoveNumber] = useState(0);
     const [practiceGamePGN, setPracticeGamePGN] = useState(chess.pgn());
     const [moveHistory, setMoveHistory] = useState([]);
     const [practiceMoveHistory, setPracticeMoveHistory] = useState([]);
+    const [isPracticeMode, setIsPracticeMode] = useState(false);
 
-    function onDrop(sourceSquare, targetSquare) {
+    function onDrop(sourceSquare, targetSquare, piece) {
         const move = {
           from: sourceSquare,
           to: targetSquare,
-          promotion: "q",
+          promotion: piece[1].toLowerCase() ?? "q",
         };
 
-        chess.move(move);
+        let userMove = chess.move(move);
+
+        if (!isPracticeMode) {
+            updateBoard();
+        }
+
+        if (isPracticeMode) {
+            console.log(practiceMoveHistory[moveNumber]);
+            console.log(moveNumber);
+            if (userMove.san === practiceMoveHistory[moveNumber]) {
+                console.log("Hola");
+                updateBoard();
+                setMoveNumber(prevMoveNumber => prevMoveNumber + 1);
+                setTimeout(() => {
+                    const machineMove = chess.move(practiceMoveHistory[moveNumber + 1]);
+                    if (machineMove) {
+                        updateBoard();
+                        setMoveNumber(prevMoveNumber => prevMoveNumber + 1)
+                    }
+                }, 500);
+                return true;
+            }   else {
+                    chess.undo();
+                    return false;
+                }
+        }
+    }
+    
+
+    function updateBoard() {
         setBoardPosition(chess.fen());
         setGamePGN(chess.pgn());
         setMoveHistory(chess.history());
@@ -58,16 +89,33 @@ function ChessRepertoireBoard() {
         setPracticeMoveHistory(moveHistory);
         setBoardPosition("start");
         chess.reset();
+        setIsPracticeMode(true);
+    }
+
+    function stopPractice() {
+        setIsPracticeMode(false);
+        setBoardPosition("start");
+        chess.reset();
+        setGamePGN(chess.pgn());
+        setMoveHistory([]);
+        setMoveNumber(0);
     }
 
     return <div>
         <h1>Chess Board</h1>
         <Chessboard boardWidth={520} animationDuration={0} boardOrientation={rotateBoard} position={boardPosition} onPieceDrop={onDrop} />
-        <button onClick={handleRotateBoard}>Rotate Board</button>
-        <button onClick={handleLogs}>Console log</button>
-        <button onClick={deleteLastMove}>Delete last move</button>
-        <button onClick={saveRepertoire}>Save</button>
-        <button onClick={startPractice}>Practice</button>
+        {!isPracticeMode ? (
+            <div>
+                <button onClick={handleRotateBoard}>Rotate Board</button>
+                <button onClick={handleLogs}>Console log</button>
+                <button onClick={deleteLastMove}>Delete last move</button>
+                <button onClick={saveRepertoire}>Save</button>
+                <button onClick={startPractice}>Practice</button>
+            </div>
+        ) : (
+            <button onClick={stopPractice}>Stop Practice</button>
+        )
+        }
         <p>{gamePGN}</p>
         <p>{moveHistory}</p>
     </div>
