@@ -41,4 +41,15 @@ router.put("/data/:id", async (req, res, next) => {
   }
 });
 
+// Route to delete data from the database
+router.delete("/data/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await db.none("DELETE FROM repertoires WHERE id = $1", [id]);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
