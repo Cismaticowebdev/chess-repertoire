@@ -26,4 +26,19 @@ router.post("/data", async (req, res, next) => {
   }
 });
 
+// Route to update data in the database
+router.put("/data/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const { title, moves, creator } = req.body;
+  try {
+    await db.none(
+      "UPDATE repertoires SET title = $1, moves = $2, creator = $3 WHERE id = $4",
+      [title, moves, creator, id]
+    );
+    res.status(200).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
