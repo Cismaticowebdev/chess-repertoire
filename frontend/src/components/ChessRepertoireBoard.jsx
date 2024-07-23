@@ -33,7 +33,6 @@ function ChessRepertoireBoard() {
             console.log(practiceMoveHistory[moveNumber]);
             console.log(moveNumber);
             if (userMove.san === practiceMoveHistory[moveNumber]) {
-                console.log("Hola");
                 updateBoard();
                 setMoveNumber(prevMoveNumber => prevMoveNumber + 1);
                 setTimeout(() => {
