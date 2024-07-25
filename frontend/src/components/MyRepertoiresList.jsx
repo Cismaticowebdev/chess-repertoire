@@ -21,11 +21,10 @@ useEffect(() => {
         <h1>List</h1>
         <ul>
             {repertoires.map(repertoire => (
-                <li>
-                    key={repertoire.id}
-                    title={repertoire.title}
-                    moves={repertoire.moves}
-                    creator={repertoire.creator}
+                <li key={repertoire.id}>
+                    <h3>{repertoire.title}</h3>
+                    <p>{repertoire.moves}</p>
+                    <p>{repertoire.creator}</p>
                 </li>
             ))}
         </ul>
