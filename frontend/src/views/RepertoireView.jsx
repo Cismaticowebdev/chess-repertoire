@@ -25,9 +25,6 @@ function RepertoireView() {
     }
 
     return <div>
-        <h1>{repertoire.title}</h1>
-        <p>Moves: {repertoire.moves}</p>
-        <p>Creator: {repertoire.creator}</p>
         <ChessRepertoireBoard repertoire={repertoire}/>
     </div>
 }

@@ -14,6 +14,7 @@ function ChessRepertoireBoard( {repertoire}) {
     const [moveHistory, setMoveHistory] = useState([]);
     const [practiceMoveHistory, setPracticeMoveHistory] = useState([]);
     const [isPracticeMode, setIsPracticeMode] = useState(false);
+    const [repertoireName, setRepertoireName] = useState(repertoire.title);
 
     useEffect(() => {
         if (repertoire) {
@@ -87,7 +88,7 @@ function ChessRepertoireBoard( {repertoire}) {
 
     async function saveRepertoire(id) {
         const updatedRepertoire = {
-            title: repertoire.title,
+            title: repertoireName,
             moves: gamePGN,
             creator: repertoire.creator,
         }
@@ -122,7 +123,16 @@ function ChessRepertoireBoard( {repertoire}) {
     }
 
     return <div>
-        <h1>Chess Board</h1>
+        <h1>{repertoireName}</h1>
+        <label>
+            New Repertoire Name: 
+            <input 
+                type="text" 
+                value={repertoireName} 
+                onChange={(e) => setRepertoireName(e.target.value)}
+            />
+        </label>
+        
         <Chessboard boardWidth={520} animationDuration={0} boardOrientation={rotateBoard} position={boardPosition} onPieceDrop={onDrop} />
         {!isPracticeMode ? (
             <div>

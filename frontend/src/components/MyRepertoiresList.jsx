@@ -16,6 +16,16 @@ const navigate = useNavigate();
         }
     };
 
+    async function addNewRepertoire() {
+        try {
+            const response = await fetch('http://localhost:3000/api/data');
+            const data = await response.json();
+            setRepertoires(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     async function deleteRepertoire(id) {
         try {
             const response = await fetch(`http://localhost:3000/api/data/${id}`, {
@@ -40,7 +50,8 @@ const navigate = useNavigate();
     }
 
     return <div>
-        <h1>Repertoire List</h1>
+        <button>Add new repertoire</button>
+        <h2>Repertoire List</h2>
         <ul>
             {repertoires.map(repertoire => (
                 <li key={repertoire.id}>
