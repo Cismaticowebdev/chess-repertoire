@@ -17,12 +17,27 @@ const navigate = useNavigate();
     };
 
     async function addNewRepertoire() {
+        const newRepertoire = {
+            title: "New Repertoire",
+            moves: "",
+            creator: "Alberto",
+        };
+
         try {
-            const response = await fetch('http://localhost:3000/api/data');
-            const data = await response.json();
-            setRepertoires(data);
+            const response = await fetch('http://localhost:3000/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newRepertoire),
+            });
+            if (response.ok) {
+                fetchRepertoires();
+            } else {
+                console.error('Error adding new repertoire:', response.statusText);
+            }
         } catch (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error adding new repertoire:', error);
         }
     };
 
@@ -50,7 +65,7 @@ const navigate = useNavigate();
     }
 
     return <div>
-        <button>Add new repertoire</button>
+        <button onClick={addNewRepertoire}>Add new repertoire</button>
         <h2>Repertoire List</h2>
         <ul>
             {repertoires.map(repertoire => (
