@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ChessRepertoireBoard from "../components/ChessRepertoireBoard";
 
 function RepertoireView() {
     const {id} = useParams();
@@ -8,7 +9,7 @@ function RepertoireView() {
     useEffect(() => {
         const fetchRepertoire = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/data/repertoires/${id}`);
+                const response = await fetch(`http://localhost:3000/api/data/${id}`);
                 const data = await response.json();
                 setRepertoire(data);
             } catch (error) {
@@ -27,6 +28,7 @@ function RepertoireView() {
         <h1>{repertoire.title}</h1>
         <p>Moves: {repertoire.moves}</p>
         <p>Creator: {repertoire.creator}</p>
+        <ChessRepertoireBoard repertoire={repertoire}/>
     </div>
 }
 

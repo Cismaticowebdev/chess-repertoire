@@ -1,9 +1,9 @@
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MovesList from "./MovesList";
 
-function ChessRepertoireBoard() {
+function ChessRepertoireBoard( {repertoire}) {
     const chessRef = useRef(new Chess());
     const chess = chessRef.current;
 
@@ -15,6 +15,13 @@ function ChessRepertoireBoard() {
     const [moveHistory, setMoveHistory] = useState([]);
     const [practiceMoveHistory, setPracticeMoveHistory] = useState([]);
     const [isPracticeMode, setIsPracticeMode] = useState(false);
+
+    useEffect(() => {
+        if (repertoire) {
+            chess.loadPgn(repertoire.moves);
+            updateBoard();
+        }
+    }, []);
 
     function onDrop(sourceSquare, targetSquare, piece) {
         const move = {
@@ -52,8 +59,8 @@ function ChessRepertoireBoard() {
     
 
     function updateBoard() {
-        setBoardPosition(chess.fen());
         setGamePGN(chess.pgn());
+        setBoardPosition(chess.fen());
         setMoveHistory(chess.history());
     }
 
@@ -86,18 +93,17 @@ function ChessRepertoireBoard() {
     function startPractice() {
         setPracticeGamePGN(gamePGN);
         setPracticeMoveHistory(moveHistory);
-        setBoardPosition("start");
+        setMoveNumber(0);
         chess.reset();
+        setBoardPosition("start");
         setIsPracticeMode(true);
     }
 
     function stopPractice() {
         setIsPracticeMode(false);
-        setBoardPosition("start");
         chess.reset();
-        setGamePGN(chess.pgn());
-        setMoveHistory([]);
-        setMoveNumber(0);
+        chess.loadPgn(practiceGamePGN);
+        updateBoard();
     }
 
     return <div>

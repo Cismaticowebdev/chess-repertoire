@@ -5,7 +5,7 @@ function MyRepertoiresList() {
 const [repertoires, setRepertoires] = useState([]);
 const navigate = useNavigate();
 
-useEffect(() => {
+
     const fetchRepertoires = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/data');
@@ -16,10 +16,26 @@ useEffect(() => {
         }
     };
 
-    fetchRepertoires();
-}, []);
+    const deleteRepertoire = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/data/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                fetchRepertoires();
+            } else {
+                console.error('Error deleting repertoire:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error deleting repertoire:', error);
+        }
+    };
 
-    function handleClick(id) {
+    useEffect(() => {
+        fetchRepertoires();
+    }, []);
+
+    function viewRepertoire(id) {
         navigate(`/repertoire/${id}`);
     }
 
@@ -31,7 +47,8 @@ useEffect(() => {
                     <h3>{repertoire.title}</h3>
                     <p>{repertoire.moves}</p>
                     <p>{repertoire.creator}</p>
-                    <button onClick={handleClick}>View Repertoire</button>
+                    <button onClick={() => viewRepertoire(repertoire.id)}>View</button>
+                    <button onClick={() => deleteRepertoire(repertoire.id)}>Delete</button>
                 </li>
             ))}
         </ul>
