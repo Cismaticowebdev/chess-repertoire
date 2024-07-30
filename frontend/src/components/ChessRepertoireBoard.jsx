@@ -1,7 +1,6 @@
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 import { useEffect, useRef, useState } from "react";
-import MovesList from "./MovesList";
 
 function ChessRepertoireBoard( {repertoire}) {
     const chessRef = useRef(new Chess());
@@ -86,8 +85,24 @@ function ChessRepertoireBoard( {repertoire}) {
         setMoveHistory(chess.history());
     }
 
-    function saveRepertoire() {
-        
+    async function saveRepertoire(id) {
+        const updatedRepertoire = {
+            title: repertoire.title,
+            moves: gamePGN,
+            creator: repertoire.creator,
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/data/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedRepertoire),
+            });
+        } catch (error) {
+            console.error("Error updating repertoire:", error);
+        }
     }
 
     function startPractice() {
@@ -114,7 +129,7 @@ function ChessRepertoireBoard( {repertoire}) {
                 <button onClick={handleRotateBoard}>Rotate Board</button>
                 <button onClick={handleLogs}>Console log</button>
                 <button onClick={deleteLastMove}>Delete last move</button>
-                <button onClick={saveRepertoire}>Save</button>
+                <button onClick={() => saveRepertoire(repertoire.id)}>Save</button>
                 <button onClick={startPractice}>Practice</button>
             </div>
         ) : (

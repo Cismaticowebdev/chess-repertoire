@@ -6,7 +6,7 @@ const [repertoires, setRepertoires] = useState([]);
 const navigate = useNavigate();
 
 
-    const fetchRepertoires = async () => {
+    async function fetchRepertoires() {
         try {
             const response = await fetch('http://localhost:3000/api/data');
             const data = await response.json();
@@ -16,7 +16,7 @@ const navigate = useNavigate();
         }
     };
 
-    const deleteRepertoire = async (id) => {
+    async function deleteRepertoire(id) {
         try {
             const response = await fetch(`http://localhost:3000/api/data/${id}`, {
                 method: 'DELETE',
