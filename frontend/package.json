@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.3",
     "bootstrap": "^5.3.3",
     "chess.js": "^1.0.0-beta.8",
+    "firebase": "^10.12.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.3",
     "react-chessboard": "^4.6.0",
@@ -19,13 +21,17 @@
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "vite": "^5.2.0"
+    "jsdom": "^24.1.1",
+    "vite": "^5.2.0",
+    "vitest": "^2.0.5"
   }
 }
