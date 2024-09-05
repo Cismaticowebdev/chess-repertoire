@@ -32,12 +32,7 @@ function App() {
               element={<ProtectedRoute component={Logout} isPrivate={true} />}
             />
             <Route path="/repertoires" element={<Repertoires />} />
-            <Route
-              path="/repertoire/:id"
-              element={
-                <ProtectedRoute component={RepertoireView} isPrivate={true} />
-              }
-            />
+            <Route path="/repertoire/:id" element={<RepertoireView />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

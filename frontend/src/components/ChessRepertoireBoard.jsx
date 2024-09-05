@@ -11,7 +11,8 @@ function ChessRepertoireBoard({ repertoire }) {
   const chessRef = useRef(new Chess());
   const chess = chessRef.current;
   const { user } = useAuth();
-  const userIsOwner = repertoire.user_id === user.id;
+
+  const userIsOwner = user && repertoire.user_id === user.id;
 
   const [rotateBoard, setRotateBoard] = useState("white");
   const [boardPosition, setBoardPosition] = useState("start");
