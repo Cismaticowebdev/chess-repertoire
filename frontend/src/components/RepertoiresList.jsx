@@ -21,11 +21,19 @@ function RepertoiresList() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  async function fetchRepertoires() {
-    let { data: repertoires, error } = await supabase
-      .from("repertoires")
-      .select("*");
-    setRepertoires(repertoires);
+  async function fetchRepertoires(searchQuery = "") {
+    let query = supabase.from("repertoires").select("*");
+
+    if (searchQuery) {
+      query = query.ilike("title", `%${searchQuery}%`);
+    }
+
+    const { data: repertoires, error } = await query;
+    if (error) {
+      console.error("Error fetching repertoires:", error);
+    } else {
+      setRepertoires(repertoires);
+    }
   }
 
   async function addNewRepertoire() {
@@ -82,6 +90,11 @@ function RepertoiresList() {
     setCurrentPage(pageNumber);
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchRepertoires(searchInput);
+  };
+
   return (
     <Container fluid>
       <h1 className="mb-3">Repertoires</h1>
@@ -99,7 +112,7 @@ function RepertoiresList() {
             : "Show only my repertoires"}
         </Button>
 
-        <Form>
+        <Form onSubmit={handleSearch}>
           <Form.Group className="my-3">
             <Form.Control
               type="text"
