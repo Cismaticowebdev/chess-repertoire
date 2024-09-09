@@ -1,13 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Button, ListGroup } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  ListGroup,
+  Pagination,
+  Form,
+} from "react-bootstrap";
 import supabase from "../supabaseClient";
 import { useAuth } from "./AuthContext";
 
 function RepertoiresList() {
   const [repertoires, setRepertoires] = useState([]);
   const [myRepertoires, setMyrepertoires] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage] = useState(6);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -25,8 +35,6 @@ function RepertoiresList() {
       email: user.email,
       userID: user.id,
     };
-
-    console.log(user);
 
     const { data, error } = await supabase
       .from("repertoires")
@@ -53,6 +61,15 @@ function RepertoiresList() {
     fetchRepertoires();
   }, []);
 
+  useEffect(() => {
+    setTotalPages(Math.ceil(repertoires.length / itemsPerPage));
+  }, [repertoires, itemsPerPage]);
+
+  const paginatedRepertoires = repertoires.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   function viewRepertoire(id) {
     navigate(`/repertoire/${id}`);
   }
@@ -61,23 +78,47 @@ function RepertoiresList() {
     setMyrepertoires(!myRepertoires);
   }
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <Container fluid>
       <h1 className="mb-3">Repertoires</h1>
-      <Button variant="secondary" onClick={addNewRepertoire}>
-        Add new repertoire
-      </Button>
-      <Button variant="success" className="mx-4" onClick={toggleMyRepertoires}>
-        {myRepertoires
-          ? "Show all the repertoires"
-          : "Show only my repertoires"}
-      </Button>
+      <div className="">
+        <Button variant="secondary" onClick={addNewRepertoire}>
+          Add new repertoire
+        </Button>
+        <Button
+          variant="success"
+          className="mx-4"
+          onClick={toggleMyRepertoires}
+        >
+          {myRepertoires
+            ? "Show all the repertoires"
+            : "Show only my repertoires"}
+        </Button>
+
+        <Form>
+          <Form.Group className="my-3">
+            <Form.Control
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="e.g Sicilian Defense"
+            />
+          </Form.Group>
+          <Button variant="secondary" type="submit">
+            Search
+          </Button>
+        </Form>
+      </div>
       <div className="mt-4 mb-3">
         {myRepertoires ? <h2>My Repertoires</h2> : <h2>All Repertoires</h2>}
       </div>
 
-      <ListGroup className="list-group">
-        {repertoires.map(
+      <ListGroup className="list-group mb-5 pb-3">
+        {paginatedRepertoires.map(
           (repertoire) =>
             ((user && user.id === repertoire.user_id) || !myRepertoires) && (
               <ListGroup.Item className="list-item" key={repertoire.id}>
@@ -106,6 +147,17 @@ function RepertoiresList() {
             )
         )}
       </ListGroup>
+      <Pagination className="position-fixed bottom-0 pt-5">
+        {[...Array(totalPages)].map((_, index) => (
+          <Pagination.Item
+            key={index}
+            active={index + 1 === currentPage}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </Pagination.Item>
+        ))}
+      </Pagination>
     </Container>
   );
 }
