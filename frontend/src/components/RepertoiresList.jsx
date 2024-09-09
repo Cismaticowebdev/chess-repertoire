@@ -79,7 +79,7 @@ function RepertoiresList() {
       <ListGroup className="list-group">
         {repertoires.map(
           (repertoire) =>
-            (repertoire.email || !myRepertoires) && (
+            ((user && user.id === repertoire.user_id) || !myRepertoires) && (
               <ListGroup.Item className="list-item" key={repertoire.id}>
                 <h3>{repertoire.title.substr(0, 40)}</h3>
                 <p>Moves: {repertoire.moves.substr(0, 40)}</p>
@@ -92,7 +92,7 @@ function RepertoiresList() {
                   >
                     View
                   </Button>
-                  {repertoire.email && (
+                  {user && user.id === repertoire.user_id && (
                     <Button
                       variant="danger"
                       onClick={() => deleteRepertoire(repertoire.id)}
